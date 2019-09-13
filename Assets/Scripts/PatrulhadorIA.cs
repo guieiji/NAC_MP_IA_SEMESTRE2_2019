@@ -2,15 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class AtiradorIA : MonoBehaviour
+public class PatrulhadorIA : MonoBehaviour
 {
     private float raySize = 5f;
     private RaycastHit hit;
 
+    NavMeshAgent navAgent;
+
     public enum Estados
     {
-        PROCURAR,
+        PATRULHAR,
 
         ATIRAR,
 
@@ -20,15 +23,20 @@ public class AtiradorIA : MonoBehaviour
     private Estados estadoAtual;
     private Transform alvo;
     private Transform player;
-    float distanciaDoJogador;
+    
 
-    [Header("ESTADO:PROCURAR")]
-    private float distanciaProcurar = 20f;
+    [Header("ESTADO:PATRULHAR")]
+    private float distanciaPatrulhar = 4f;
+    int indexWaypoint = 0;
+    public Transform[] waypoints;
+    float distanciaPertoWaypoint = 4f;
+    public Transform destino;
+
 
     [Header("ESTADO:ATIRAR")]
-    private float tempoAtirar = 4f;
+    private float tempoAtirar = 2f;
     private float tempoComecouAtirar;
-    private float velRot = 5f;
+    private float velRot;
     public GameObject bala;
     public Transform pontaArma;
 
@@ -38,30 +46,30 @@ public class AtiradorIA : MonoBehaviour
 
     private void Awake()
     {
-        estadoAtual = Estados.PROCURAR;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        estadoAtual = Estados.PATRULHAR;
     }
 
     // Start is called before the first frame update
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        distanciaDoJogador = Vector3.Distance(transform.position, player.position);
         Debug.DrawRay(transform.position, transform.forward * raySize, Color.red, 0.5f);
         switch (estadoAtual)
         {
-            case Estados.PROCURAR:
+            case Estados.PATRULHAR:
                 if (PlayerNoAlcance())
                 {
                     Atirar();
                 }
                 else
                 {
-                    alvo = transform;
+                    MudarWaypointIndex();
+                    destino = waypoints[indexWaypoint];
                 }
                 break;
 
@@ -69,17 +77,15 @@ public class AtiradorIA : MonoBehaviour
                 if (AcabaramBalas())
                 {
                     Recarregar();
-                    
                 }
                 else
                 {
                     alvo = player;
-                    if (Physics.Raycast(transform.position, transform.forward, out hit, distanciaProcurar))
+                    destino = transform;
+                    if (Physics.Raycast(transform.position, transform.forward, out hit, distanciaPatrulhar))
                     {
-                        Debug.Log(hit.collider.tag);
                         if (hit.collider.tag == "Player")
                         {
-                            Debug.Log("atirou");
                             AtirarNoJogador();
                         }
                     }
@@ -89,35 +95,63 @@ public class AtiradorIA : MonoBehaviour
             case Estados.RECARREGAR:
                 if (RecarregouTempoSuficiente())
                 {
-                    Debug.Log("Acabou Reload");
-                    Procurar();
+                    Patrulhar();
                 }
                 else
                 {
-                    alvo = player;
+                    alvo = transform;
                 }
 
                 break;
         }
+        if (alvo == player)
+        {
+            transform.rotation = transform.rotation;
+            
+        }
+        else
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(alvo.position - transform.position), Time.deltaTime * velRot);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(alvo.position - transform.position), Time.deltaTime * velRot);
+        }
+        navAgent.destination = destino.position;
     }
 
-    #region PROCURAR
 
-    private void Procurar()
+
+    #region PATRULHAR
+
+    private void Patrulhar()
     {
-        estadoAtual = Estados.PROCURAR;
+        estadoAtual = Estados.PATRULHAR;
     }
 
-    #endregion PROCURAR
+
+    private void MudarWaypointIndex()
+    {
+        if (EstaPertoWaypoint())
+        {
+            indexWaypoint++;
+            if(indexWaypoint == waypoints.Length)
+            {
+                indexWaypoint = 0;
+            }
+        }
+    }
+
+    private bool EstaPertoWaypoint()
+    {
+        return Vector3.Distance(transform.position, waypoints[indexWaypoint].position) < distanciaPertoWaypoint;
+
+    }
+
+    #endregion PATRULHAR
 
     #region ATIRAR
 
     private void Atirar()
     {
         estadoAtual = Estados.ATIRAR;
-        tempoComecouAtirar = Time.time;
     }
 
     private bool AcabaramBalas()
@@ -127,12 +161,12 @@ public class AtiradorIA : MonoBehaviour
 
     private bool PlayerNoAlcance()
     {
-        return Vector3.Distance(transform.position, player.position) < distanciaProcurar;
+        return Vector3.Distance(transform.position, player.position) < distanciaPatrulhar;
     }
 
     private void AtirarNoJogador()
     {
-        Instantiate(bala, pontaArma.position,pontaArma.rotation);
+        Instantiate(bala, pontaArma);
     }
 
     #endregion ATIRAR
@@ -147,7 +181,7 @@ public class AtiradorIA : MonoBehaviour
 
     private void RecarregouBalas()
     {
-        estadoAtual = Estados.PROCURAR;
+        estadoAtual = Estados.PATRULHAR;
     }
 
     private bool RecarregouTempoSuficiente()

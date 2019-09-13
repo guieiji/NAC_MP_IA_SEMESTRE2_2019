@@ -12,6 +12,6 @@ public class ProjetilScript : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        transform.Translate(transform.forward * Time.deltaTime);
+        transform.Translate(Vector3.forward * Time.deltaTime);
     }
 }
