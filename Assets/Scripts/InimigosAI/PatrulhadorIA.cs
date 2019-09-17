@@ -9,7 +9,7 @@ public class PatrulhadorIA : MonoBehaviour
     private float raySize = 5f;
     private RaycastHit hit;
 
-    NavMeshAgent navAgent;
+    private NavMeshAgent navAgent;
 
     public enum Estados
     {
@@ -23,41 +23,47 @@ public class PatrulhadorIA : MonoBehaviour
     private Estados estadoAtual;
     private Transform alvo;
     private Transform player;
-    
 
     [Header("ESTADO:PATRULHAR")]
     private float distanciaPatrulhar = 4f;
-    int indexWaypoint = 0;
-    public Transform[] waypoints;
-    float distanciaPertoWaypoint = 4f;
-    public Transform destino;
 
+    private int indexWaypoint = 0;
+    public Transform[] waypoints;
+    private float distanciaPertoWaypoint = 4f;
+    //public Transform destino;
 
     [Header("ESTADO:ATIRAR")]
-    private float tempoAtirar = 2f;
+    private float tempoAtirar = 4f;
+
     private float tempoComecouAtirar;
-    private float velRot;
+    private float velRot = 5f;
     public GameObject bala;
     public Transform pontaArma;
+    private bool atirando;
+    public float rateOfFire;
 
     [Header("ESTADO:RECARREGAR")]
     private float tempoRecarregar = 2f;
+
     private float tempoComecouRecarregar;
 
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         estadoAtual = Estados.PATRULHAR;
+        navAgent = GetComponent<NavMeshAgent>();
     }
 
     // Start is called before the first frame update
     private void Start()
     {
+        alvo = waypoints[0];
     }
 
     // Update is called once per frame
     private void Update()
     {
+        Debug.Log("Player no range? " + PlayerNoAlcance());
         Debug.DrawRay(transform.position, transform.forward * raySize, Color.red, 0.5f);
         switch (estadoAtual)
         {
@@ -69,7 +75,7 @@ public class PatrulhadorIA : MonoBehaviour
                 else
                 {
                     MudarWaypointIndex();
-                    destino = waypoints[indexWaypoint];
+                    alvo = waypoints[indexWaypoint];
                 }
                 break;
 
@@ -81,12 +87,18 @@ public class PatrulhadorIA : MonoBehaviour
                 else
                 {
                     alvo = player;
-                    destino = transform;
+
                     if (Physics.Raycast(transform.position, transform.forward, out hit, distanciaPatrulhar))
                     {
+                        Debug.Log(hit.collider.tag);
                         if (hit.collider.tag == "Player")
                         {
-                            AtirarNoJogador();
+                            //AtirarNoJogador();
+                            if (!atirando)
+                            {
+                                StartCoroutine(AtirarContinuo());
+                                atirando = true;
+                            }
                         }
                     }
                 }
@@ -99,25 +111,24 @@ public class PatrulhadorIA : MonoBehaviour
                 }
                 else
                 {
+                    StopAllCoroutines();
                     alvo = transform;
                 }
 
                 break;
         }
-        if (alvo == player)
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(alvo.position - transform.position), Time.deltaTime * velRot);
+
+        if (estadoAtual == Estados.ATIRAR)
         {
-            transform.rotation = transform.rotation;
-            
+            navAgent.destination = transform.position;
         }
         else
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(alvo.position - transform.position), Time.deltaTime * velRot);
-
+            navAgent.destination = alvo.position;
         }
-        navAgent.destination = destino.position;
     }
-
-
 
     #region PATRULHAR
 
@@ -126,13 +137,12 @@ public class PatrulhadorIA : MonoBehaviour
         estadoAtual = Estados.PATRULHAR;
     }
 
-
     private void MudarWaypointIndex()
     {
         if (EstaPertoWaypoint())
         {
             indexWaypoint++;
-            if(indexWaypoint == waypoints.Length)
+            if (indexWaypoint == waypoints.Length)
             {
                 indexWaypoint = 0;
             }
@@ -142,7 +152,6 @@ public class PatrulhadorIA : MonoBehaviour
     private bool EstaPertoWaypoint()
     {
         return Vector3.Distance(transform.position, waypoints[indexWaypoint].position) < distanciaPertoWaypoint;
-
     }
 
     #endregion PATRULHAR
@@ -152,11 +161,19 @@ public class PatrulhadorIA : MonoBehaviour
     private void Atirar()
     {
         estadoAtual = Estados.ATIRAR;
+        tempoComecouAtirar = Time.time;
     }
 
     private bool AcabaramBalas()
     {
         return tempoAtirar + tempoComecouAtirar < Time.time;
+    }
+
+    private IEnumerator AtirarContinuo()
+    {
+        yield return new WaitForSeconds(rateOfFire);
+        Instantiate(bala, pontaArma.position, pontaArma.rotation);
+        StartCoroutine(AtirarContinuo());
     }
 
     private bool PlayerNoAlcance()
@@ -166,7 +183,7 @@ public class PatrulhadorIA : MonoBehaviour
 
     private void AtirarNoJogador()
     {
-        Instantiate(bala, pontaArma);
+        Instantiate(bala, pontaArma.position, pontaArma.rotation);
     }
 
     #endregion ATIRAR
@@ -177,6 +194,7 @@ public class PatrulhadorIA : MonoBehaviour
     {
         estadoAtual = Estados.RECARREGAR;
         tempoComecouRecarregar = Time.time;
+        atirando = false;
     }
 
     private void RecarregouBalas()

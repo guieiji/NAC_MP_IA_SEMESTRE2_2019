@@ -20,20 +20,24 @@ public class AtiradorIA : MonoBehaviour
     private Estados estadoAtual;
     private Transform alvo;
     private Transform player;
-    float distanciaDoJogador;
+    private float distanciaDoJogador;
 
     [Header("ESTADO:PROCURAR")]
     private float distanciaProcurar = 20f;
 
     [Header("ESTADO:ATIRAR")]
     private float tempoAtirar = 4f;
+
     private float tempoComecouAtirar;
     private float velRot = 5f;
     public GameObject bala;
     public Transform pontaArma;
+    public float rateOfFire = 1f;
+    private bool atirando;
 
     [Header("ESTADO:RECARREGAR")]
     private float tempoRecarregar = 2f;
+
     private float tempoComecouRecarregar;
 
     private void Awake()
@@ -69,7 +73,6 @@ public class AtiradorIA : MonoBehaviour
                 if (AcabaramBalas())
                 {
                     Recarregar();
-                    
                 }
                 else
                 {
@@ -80,7 +83,11 @@ public class AtiradorIA : MonoBehaviour
                         if (hit.collider.tag == "Player")
                         {
                             Debug.Log("atirou");
-                            AtirarNoJogador();
+                            if (!atirando)
+                            {
+                                StartCoroutine(AtirarContinuo());
+                                atirando = true;
+                            }
                         }
                     }
                 }
@@ -120,6 +127,13 @@ public class AtiradorIA : MonoBehaviour
         tempoComecouAtirar = Time.time;
     }
 
+    private IEnumerator AtirarContinuo()
+    {
+        yield return new WaitForSeconds(rateOfFire);
+        AtirarNoJogador();
+        StartCoroutine(AtirarContinuo());
+    }
+
     private bool AcabaramBalas()
     {
         return tempoAtirar + tempoComecouAtirar < Time.time;
@@ -132,7 +146,7 @@ public class AtiradorIA : MonoBehaviour
 
     private void AtirarNoJogador()
     {
-        Instantiate(bala, pontaArma.position,pontaArma.rotation);
+        Instantiate(bala, pontaArma.position, pontaArma.rotation);
     }
 
     #endregion ATIRAR
@@ -143,6 +157,8 @@ public class AtiradorIA : MonoBehaviour
     {
         estadoAtual = Estados.RECARREGAR;
         tempoComecouRecarregar = Time.time;
+        atirando = false;
+        StopAllCoroutines();
     }
 
     private void RecarregouBalas()
