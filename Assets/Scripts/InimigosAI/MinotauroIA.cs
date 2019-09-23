@@ -248,25 +248,26 @@ public class MinotauroIA : MonoBehaviour
         //Debug.Log("acelerou");
     }
 
-    private void OnCollisionEnter(Collision col)
-    {
-        Debug.Log("Colisao");
+    //private void OnCollisionEnter(Collision col)
+    //{
+    //    Debug.Log("Colisao");
 
-        if (col.collider.CompareTag("Player"))
-        {
-            Debug.Log("AcertouPlayer");
-            Atordoado();
+    //    if (col.collider.CompareTag("Parede"))
+    //    {
+    //        Debug.Log("AcertouParede");
+    //        estadoAtual = Estados.Esperar;
+    //        alvo = transform;
+    //        ResetarNavMesh();
+    //    }
 
-        }
+    //    if (col.collider.CompareTag("Obstaculo"))
+    //    {
+    //    }
 
-        if (col.collider.CompareTag("Obstaculo"))
-        {
-        }
-
-        if (col.collider.CompareTag("Player"))
-        {
-        }
-    }
+    //    if (col.collider.CompareTag("Player"))
+    //    {
+    //    }
+    //}
 
     private void ResetarNavMesh()
     {
