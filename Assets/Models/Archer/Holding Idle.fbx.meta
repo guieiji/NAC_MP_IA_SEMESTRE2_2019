@@ -6,7 +6,37 @@ ModelImporter:
   - first:
       74: -203655887218126122
     second: Idle
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Akai_MAT
+    second: {fileID: 2100000, guid: 56ba5cdbc8e686549a674440728e04bb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arrow_MAT
+    second: {fileID: 2100000, guid: 4491020788994f44098c02457ded7e8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Body_MAT
+    second: {fileID: 2100000, guid: 9148db742241da44598f2a45d7eaa47d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Bow_MAT
+    second: {fileID: 2100000, guid: 3202f43169cac4a4f995ebf71ab046d4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: EyeSpec_MAT
+    second: {fileID: 2100000, guid: 9148db742241da44598f2a45d7eaa47d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Lashes_MAT
+    second: {fileID: 2100000, guid: 9148db742241da44598f2a45d7eaa47d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -66,7 +96,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.2
+    globalScale: 1.3
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -112,7 +142,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.2
+    globalScale: 0.012999999
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
