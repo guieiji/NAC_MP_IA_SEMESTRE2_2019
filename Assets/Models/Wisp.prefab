@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1216156690446717840}
   - component: {fileID: 1216156690446717847}
   - component: {fileID: 1216156690446717846}
+  - component: {fileID: -2138579816087550862}
   m_Layer: 0
   m_Name: Wisp
   m_TagString: Untagged
@@ -92,6 +93,21 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-2138579816087550862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1216156690446717845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5af283d22192e054690996b9121bb7a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tempoEsperar: 2
+  player: {fileID: 0}
+  posicaoInicial: {fileID: 0}
 --- !u!1 &1216156691478223961
 GameObject:
   m_ObjectHideFlags: 0

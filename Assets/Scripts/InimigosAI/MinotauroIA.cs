@@ -22,12 +22,14 @@ public class MinotauroIA : MonoBehaviour
     public Transform player;
 
     private NavMeshAgent navMeshAgent;
+    public Animator anim;
     private float raySize = 3f;
     private RaycastHit hit;
 
     private float aceleracaoBase;
     private float velMaxBase;
     private float velAngularBase;
+    public float velRot;
 
     // Estado: Esperar
     [Header("Estados:Esperar")]
@@ -59,10 +61,20 @@ public class MinotauroIA : MonoBehaviour
     private float tempoAtordoado = 5f;
 
     private float tempoInicioAtordoado;
+    private float tempoInicioAtropelar;
+    private float tempoAtropelarJogador = 2f;
+    private Quaternion salvaRot;
+
+    [Header("Estado: Atacar")]
+    float tempoInicioAtaque;
+    float tempoAtacando;
+    float alcanceAtaque = 3f;
 
     private void Awake()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        
     }
 
     // Start is called before the first frame update
@@ -71,7 +83,7 @@ public class MinotauroIA : MonoBehaviour
         aceleracaoBase = navMeshAgent.acceleration;
         velMaxBase = navMeshAgent.speed;
         velAngularBase = navMeshAgent.angularSpeed;
-
+        waypointAtual = waypoints[0];
         Esperar();
     }
 
@@ -84,6 +96,7 @@ public class MinotauroIA : MonoBehaviour
 
     private void ChecarEstados()
     {
+
         if (estadoAtual != Estados.Atordoado && estadoAtual != Estados.Atropelar && estadoAtual != Estados.Perseguir && DetectouJogador())
         {
             estadoAtual = Estados.Perseguir;
@@ -129,7 +142,15 @@ public class MinotauroIA : MonoBehaviour
                 break;
 
             case Estados.Atropelar:
-                AtropelarJogador();
+                if (PreparandoAtropelar())
+                {
+                    AtropelarJogador();
+                }
+                else
+                {
+                    transform.rotation = salvaRot;
+                }
+               
 
                 break;
 
@@ -149,6 +170,9 @@ public class MinotauroIA : MonoBehaviour
 
         if (alvo != null)
             navMeshAgent.destination = alvo.position;
+
+        //transform.rotation = Quaternion.Slerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(alvo.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
+
     }
 
     #region Esperar
@@ -171,6 +195,7 @@ public class MinotauroIA : MonoBehaviour
     private void Patrulhar()
     {
         estadoAtual = Estados.Patrulhar;
+        anim.Play("Walk");
     }
 
     private void MudarWaypoint()
@@ -200,11 +225,12 @@ public class MinotauroIA : MonoBehaviour
     private void Perseguir()
     {
         estadoAtual = Estados.Perseguir;
+        anim.Play("Walk");
     }
 
     private bool VendoJogador()
     {
-        if (Physics.Raycast(transform.position, transform.forward, out hit, distanciaVisao))
+        if (Physics.Raycast(transform.position + Vector3.up * 0.5f, transform.forward, out hit, distanciaVisao))
         {
             //Debug.Log(hit.collider.tag);
             if (hit.collider.tag == "Player")
@@ -223,11 +249,20 @@ public class MinotauroIA : MonoBehaviour
     {
         estadoAtual = Estados.Atropelar;
         alvoAtropelar.position = hit.point;
-        alvo = alvoAtropelar;
+        alvo = transform;
+        tempoInicioAtropelar = Time.time;
+        salvaRot = transform.rotation;
+        anim.Play("PrepareCharge");
+    }
+
+    bool PreparandoAtropelar()
+    {
+        return tempoInicioAtropelar + tempoAtropelarJogador < Time.time;
     }
 
     private void AtropelarJogador()
     {
+        alvo = alvoAtropelar;
         // usar animaçao de atropelar
         // aumentar velocidade
         navMeshAgent.acceleration = aceleracaoAtropelar;
@@ -239,7 +274,7 @@ public class MinotauroIA : MonoBehaviour
             if (hit.collider.tag == "Parede")
             {
                 Debug.Log("AcertouParede");
-                estadoAtual = Estados.Atordoado;
+                Atordoado();
                 navMeshAgent.velocity = Vector3.zero;
                 ResetarNavMesh();
             }
@@ -248,26 +283,25 @@ public class MinotauroIA : MonoBehaviour
         //Debug.Log("acelerou");
     }
 
-    //private void OnCollisionEnter(Collision col)
-    //{
-    //    Debug.Log("Colisao");
+    private void OnCollisionEnter(Collision col)
+    {
+        Debug.Log("Colisao");
 
-    //    if (col.collider.CompareTag("Parede"))
-    //    {
-    //        Debug.Log("AcertouParede");
-    //        estadoAtual = Estados.Esperar;
-    //        alvo = transform;
-    //        ResetarNavMesh();
-    //    }
+        if (col.collider.CompareTag("Parede"))
+        {
 
-    //    if (col.collider.CompareTag("Obstaculo"))
-    //    {
-    //    }
+        }
 
-    //    if (col.collider.CompareTag("Player"))
-    //    {
-    //    }
-    //}
+        if (col.collider.CompareTag("Obstaculo"))
+        {
+        }
+
+        if (col.collider.CompareTag("Player"))
+        {
+            Debug.Log("AcertouPlayer");
+            Atordoado();
+        }
+    }
 
     private void ResetarNavMesh()
     {
@@ -284,6 +318,8 @@ public class MinotauroIA : MonoBehaviour
     {
         estadoAtual = Estados.Atordoado;
         tempoInicioAtordoado = Time.time;
+        anim.Play("Stun");
+        ResetarNavMesh();
     }
 
     private bool EsperouAtordoado()

@@ -22,6 +22,8 @@ public class AtiradorIA : MonoBehaviour
     private Transform player;
     private float distanciaDoJogador;
 
+    Animator anim;
+
     [Header("ESTADO:PROCURAR")]
     private float distanciaProcurar = 20f;
 
@@ -43,6 +45,7 @@ public class AtiradorIA : MonoBehaviour
     private void Awake()
     {
         estadoAtual = Estados.PROCURAR;
+        anim = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -77,7 +80,8 @@ public class AtiradorIA : MonoBehaviour
                 else
                 {
                     alvo = player;
-                    if (Physics.Raycast(transform.position, transform.forward, out hit, distanciaProcurar))
+                    
+                    if (Physics.Raycast(transform.position + Vector3.up * 0.5f, transform.forward, out hit, distanciaProcurar))
                     {
                         Debug.Log(hit.collider.tag);
                         if (hit.collider.tag == "Player")
@@ -106,10 +110,12 @@ public class AtiradorIA : MonoBehaviour
 
                 break;
         }
+        if (estadoAtual == Estados.ATIRAR)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(player.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(alvo.position - transform.position), Time.deltaTime * velRot);
+        }
     }
-
     #region PROCURAR
 
     private void Procurar()
@@ -130,6 +136,7 @@ public class AtiradorIA : MonoBehaviour
     private IEnumerator AtirarContinuo()
     {
         yield return new WaitForSeconds(rateOfFire);
+        anim.Play("Shoot");
         AtirarNoJogador();
         StartCoroutine(AtirarContinuo());
     }

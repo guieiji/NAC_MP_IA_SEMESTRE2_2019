@@ -37,9 +37,12 @@ public class ExploderIA : MonoBehaviour
     private float distanciaPontoInicial;
 
     [Header("Estado:Explodir")]
-    private float distanciaExplosao = 1f;
+    private float distanciaExplosao = 3f;
 
     private bool explodindo;
+    public GameObject explosionFx;
+    public GameObject wispModelo;
+    public float forcaExplosao = 1000f;
 
     private void Awake()
     {
@@ -171,6 +174,16 @@ public class ExploderIA : MonoBehaviour
     private IEnumerator EsperarExplosao()
     {
         yield return new WaitForSeconds(2f);
+        Instantiate(explosionFx, wispModelo.transform.position, transform.rotation);
+
+        if (JogadorDentroExplosao())
+        {
+            Debug.Log("explodiuPlayer");
+
+            PlayerStats.playerVida -= 2;
+            player.GetComponent<Rigidbody>().AddForce((player.position - transform.position).normalized * forcaExplosao,ForceMode.Impulse);
+        }
+        Destroy(wispModelo);
         Destroy(gameObject);
     }
 
