@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.UI;
 
 public class MoverPlayerScript : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class MoverPlayerScript : MonoBehaviour
     public ArdController ardControl;
     public FirstPersonController fstPerson;
     public CrouchScript crouch;
+    public Text vida;
+    public Text vidaTxt;
 
     void Start()
     {
@@ -70,6 +73,26 @@ public class MoverPlayerScript : MonoBehaviour
         fstPerson.slide = ardControl.GetKeyDown(ArdKeyCode.BUTTON_X);
 
         crouch.crouchBtn = ardControl.GetKeyDown(ArdKeyCode.BUTTON_A);
+
+        if (ardControl.GetKeyDown(ArdKeyCode.BUTTON_START)) // pause
+        {            
+            Time.timeScale = Time.timeScale != 0 ? 0 : 1;
+        }
+
+        if (ardControl.GetKeyDown(ArdKeyCode.BUTTON_SELECT)) // ativar/desativar UI de vida
+        {
+            if (vida.enabled)
+            {
+                vida.enabled = false;
+                vidaTxt.enabled = false;
+            }
+            else
+            {
+                vida.enabled = true;
+                vidaTxt.enabled = true;
+            }
+
+        }
 
 
     }

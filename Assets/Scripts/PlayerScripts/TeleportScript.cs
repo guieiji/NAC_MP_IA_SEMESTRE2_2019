@@ -29,6 +29,21 @@ public class TeleportScript : MonoBehaviour
             col.GetComponent<CharacterController>().enabled = false;
             col.transform.position = destino.position;
             col.GetComponent<CharacterController>().enabled = true;
+
+            switch (this.name)
+            {
+                case "ExitTrigger 1":
+                    PlayerStats.ambiente_player = 2;
+                    break;
+                case "ExitTrigger 2":
+                    PlayerStats.ambiente_player = 3;
+                    break;
+                case "ExitTrigger 3":
+                    PlayerStats.ambiente_player = 4;
+                    break;
+            }
+
+
             //Instantiate(player, destino.position, destino.rotation);
         }
     }

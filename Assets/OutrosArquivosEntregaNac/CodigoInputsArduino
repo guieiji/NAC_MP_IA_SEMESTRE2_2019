@@ -1,0 +1,73 @@
+int botaoEsquerda = 12;
+int botaoBaixo = 11;
+int botaoCima = 10;
+int botaoDireita = 9;
+int botaoSelect = 8;
+int botaoStart = 7;
+int botao_Y = 6;
+int botao_B = 5;
+int botao_X = 4;
+int botao_A = 3;
+
+int sensorLuz = A0;
+
+void setup()
+{
+  pinMode(botaoEsquerda,INPUT);
+  pinMode(botaoBaixo,INPUT);
+  pinMode(botaoCima,INPUT);
+  pinMode(botaoDireita,INPUT);
+  pinMode(botaoSelect,INPUT);
+  pinMode(botaoStart,INPUT);
+  pinMode(botao_Y,INPUT);
+  pinMode(botao_B,INPUT);
+  pinMode(botao_X,INPUT);
+  pinMode(botao_A,INPUT);
+  
+  pinMode(sensorLuz,INPUT);
+  
+  Serial.begin(9600);
+}
+
+void loop()
+{
+	int leituraBotaoEsquerda = digitalRead(botaoEsquerda);
+  	int leituraBotaoBaixo = digitalRead(botaoBaixo);
+	int leituraBotaoCima = digitalRead(botaoCima);
+	int leituraBotaoDireita = digitalRead(botaoDireita);
+  	int leituraBotaoSelect = digitalRead(botaoSelect);
+	int leituraBotaoStart = digitalRead(botaoStart);
+  	int leituraBotao_Y = digitalRead(botao_Y);
+	int leituraBotao_B = digitalRead(botao_B);
+  	int leituraBotao_X = digitalRead(botao_X);
+	int leituraBotao_A = digitalRead(botao_A);
+  
+  
+  
+  	int leituraSensorLuz = analogRead(sensorLuz);
+  
+  
+  	Serial.print(leituraBotaoEsquerda);
+	Serial.print(";");
+	Serial.print(leituraBotaoBaixo);
+	Serial.print(";");
+	Serial.print(leituraBotaoCima);
+	Serial.print(";");
+	Serial.print(leituraBotaoDireita);
+	Serial.print(";");
+ 	Serial.print(leituraBotaoSelect);
+	Serial.print(";");
+	Serial.print(leituraBotaoStart);
+	Serial.print(";");
+  	Serial.print(leituraBotao_Y);
+	Serial.print(";");
+	Serial.print(leituraBotao_B);
+	Serial.print(";");
+ 	Serial.print(leituraBotao_X);
+	Serial.print(";");
+	Serial.print(leituraBotao_A);
+	Serial.print(";");
+	Serial.println(leituraSensorLuz);
+	
+	delay(10);
+}

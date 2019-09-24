@@ -16,6 +16,7 @@ public class MinotauroIA : MonoBehaviour
         Atacar
     }
 
+    private int MinotauroHP;
     private Estados estadoAtual;
 
     private Transform alvo;
@@ -38,7 +39,7 @@ public class MinotauroIA : MonoBehaviour
     public float tempoEsperar = 2f;
 
     private float tempoEsperando = 0f;
-    private float distanciaDetectar = 15f;
+    private float distanciaDetectar = 25f;
 
     [Header("Estado:Patrulhar")]
     public Transform[] waypoints;
@@ -48,7 +49,7 @@ public class MinotauroIA : MonoBehaviour
     public float distanciaMinimaWaypoint = 1f;
 
     [Header("Estado: Perseguir")]
-    private float distanciaVisao = 10f;
+    private float distanciaVisao = 20f;
 
     [Header("Estado: Atropelar")]
     private float aceleracaoAtropelar = 16f;
@@ -57,7 +58,7 @@ public class MinotauroIA : MonoBehaviour
     private float velAngularAtropelar = 0f;
 
     public Transform alvoAtropelar;
-    private float distanciaColisao = 2f;
+    private float distanciaColisao = 5f;
     private int danoAtropelar = 2;
 
     [Header("Estado: Atordoado")]
@@ -72,7 +73,7 @@ public class MinotauroIA : MonoBehaviour
     float tempoInicioAtaque;
     float tempoAtacando = 2f;
     float alcanceAtaque = 3f;
-    private float distanciaAtaque = 4f;
+    private float distanciaAtaque = 8f;
 
     private void Awake()
     {
@@ -84,6 +85,7 @@ public class MinotauroIA : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        MinotauroHP = 3;
         aceleracaoBase = navMeshAgent.acceleration;
         velMaxBase = navMeshAgent.speed;
         velAngularBase = navMeshAgent.angularSpeed;
@@ -96,6 +98,12 @@ public class MinotauroIA : MonoBehaviour
     {
         distanciaPlayer = Vector3.Distance(transform.position, player.position);
         Debug.DrawRay(transform.position, transform.forward * raySize, Color.red, 0.5f);
+
+        if(MinotauroHP <= 0)
+        {
+            Destroy(gameObject);
+        }
+
         ChecarEstados();
     }
 
@@ -307,6 +315,15 @@ public class MinotauroIA : MonoBehaviour
                 navMeshAgent.velocity = Vector3.zero;
                 ResetarNavMesh();
             }
+            if (hit.collider.tag == "Obstaculo")
+            {
+                Debug.Log("AcertouObstaculo");
+                Atordoado();
+                navMeshAgent.velocity = Vector3.zero;
+                ResetarNavMesh();
+                Destroy(hit.collider.gameObject);
+                MinotauroHP--;
+            }
         }
 
         //Debug.Log("acelerou");
@@ -338,7 +355,7 @@ public class MinotauroIA : MonoBehaviour
 
     private void ResetarNavMesh()
     {
-        navMeshAgent.acceleration = aceleracaoBase;
+        navMeshAgent.acceleration = aceleracaoBase * (2 - PlayerStats.forcaLuz/1023); // mais aceleraçao com menos luz
         navMeshAgent.speed = velMaxBase;
         navMeshAgent.angularSpeed = velAngularBase;
     }

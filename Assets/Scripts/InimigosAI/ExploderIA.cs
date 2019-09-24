@@ -19,6 +19,8 @@ public class ExploderIA : MonoBehaviour
 
     private NavMeshAgent navMeshAgent;
 
+    float aceleraçãoBase;
+
     // Estado: Esperar
     [Header("Estados:Esperar")]
     public float tempoEsperar = 2f;
@@ -53,6 +55,7 @@ public class ExploderIA : MonoBehaviour
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        aceleraçãoBase = navMeshAgent.acceleration;
         Esperar();
     }
 
@@ -64,6 +67,7 @@ public class ExploderIA : MonoBehaviour
 
     private void ChecarEstados()
     {
+        navMeshAgent.acceleration = aceleraçãoBase * (2 - PlayerStats.forcaLuz / 1023); // mais aceleraçao quanto menor a luz
         distanciaPontoInicial = Vector3.Distance(posicaoInicial.position, transform.position);
         print("Achou jogador:" + DetectouJogador());
 

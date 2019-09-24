@@ -75,10 +75,10 @@ namespace ArdJoystick
 
 				try
 				{
-                    //string result = serialPort.ReadLine();
+                    string result = serialPort.ReadLine();
 
                     // Tests
-					string result = SimulateReadLine();
+                    // string result = SimulateReadLine(); // funcionou com o teste teclado
                  
                     Debug.Log(result);
                     Debug.Log("teste");
@@ -134,8 +134,8 @@ namespace ArdJoystick
             result += (Input.GetKey(KeyCode.S) ? "1" : "0") + ";";
             result += (Input.GetKey(KeyCode.W) ? "1" : "0") + ";";
             result += (Input.GetKey(KeyCode.D) ? "1" : "0") + ";";
-            result += "1" + ";";
-            result += "1" + ";";
+            result += (Input.GetKey(KeyCode.T) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.P) ? "1" : "0")+ ";";
             result += (Input.GetKey(KeyCode.LeftShift) ? "1" : "0") + ";";
             result += (Input.GetKey(KeyCode.Space) ? "1" : "0") + ";";
             result += (Input.GetKey(KeyCode.L) ? "1" : "0") + ";";
@@ -148,7 +148,7 @@ namespace ArdJoystick
 		{
 
 			// Test for pausing the game
-			if (GetKeyDown(ArdKeyCode.BUTTON_Y))
+			if (GetKeyDown(ArdKeyCode.BUTTON_START))
 			{
 				Debug.Log("Pausar");
 				Time.timeScale = Time.timeScale != 0 ? 0 : 1;

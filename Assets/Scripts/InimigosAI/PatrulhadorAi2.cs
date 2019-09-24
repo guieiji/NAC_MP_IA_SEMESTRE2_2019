@@ -39,7 +39,7 @@ public class PatrulhadorAi2 : MonoBehaviour
 
     private int indexWaypoint = 0;
     public Transform[] waypoints;
-    private float distanciaPertoWaypoint = 3f;
+    public float distanciaPertoWaypoint = 3f;
     //public Transform destino;
 
 
@@ -206,7 +206,7 @@ public class PatrulhadorAi2 : MonoBehaviour
 
 
         navAgent.acceleration = aceleracaoPerseguir;
-        navAgent.speed = velMaxPerseguir;
+        navAgent.speed = velMaxPerseguir * (2 - PlayerStats.forcaLuz/1023); // mais rapido com menos luz
 
     }
 
