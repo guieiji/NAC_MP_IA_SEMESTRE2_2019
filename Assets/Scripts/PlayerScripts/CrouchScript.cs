@@ -36,4 +36,14 @@ public class CrouchScript : MonoBehaviour
 
 
     }
+
+
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Teleport"))
+        {
+            transform.position = col.GetComponent<TeleportScript>().destino.position;
+            Destroy(gameObject);
+        }
+    }
 }
