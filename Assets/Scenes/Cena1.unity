@@ -23772,6 +23772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782987908}
   - component: {fileID: 782987909}
+  - component: {fileID: 782987910}
   m_Layer: 0
   m_Name: ExitTrigger
   m_TagString: Untagged
@@ -23806,6 +23807,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &782987910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782987907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3aeb85b890fcd4587ec459c3560d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destino: {fileID: 1842379258}
+  player: {fileID: 2266248432099137699, guid: ab96bc0a29529c3428c10fb5474e5054, type: 3}
 --- !u!1 &785023138
 GameObject:
   m_ObjectHideFlags: 0
@@ -38686,6 +38701,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1297283762}
   - component: {fileID: 1297283763}
+  - component: {fileID: 1297283764}
   m_Layer: 0
   m_Name: ExitTrigger
   m_TagString: Untagged
@@ -38720,6 +38736,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1297283764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297283761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3aeb85b890fcd4587ec459c3560d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destino: {fileID: 1041235566}
+  player: {fileID: 2266248432099137699, guid: ab96bc0a29529c3428c10fb5474e5054, type: 3}
 --- !u!43 &1303205751
 Mesh:
   m_ObjectHideFlags: 0
@@ -64358,6 +64388,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2083324397}
   - component: {fileID: 2083324398}
+  - component: {fileID: 2083324399}
   m_Layer: 0
   m_Name: ExitTrigger
   m_TagString: Untagged
@@ -64392,6 +64423,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2083324399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083324396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3aeb85b890fcd4587ec459c3560d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destino: {fileID: 1389594027}
+  player: {fileID: 2266248432099137699, guid: ab96bc0a29529c3428c10fb5474e5054, type: 3}
 --- !u!43 &2083568144
 Mesh:
   m_ObjectHideFlags: 0
