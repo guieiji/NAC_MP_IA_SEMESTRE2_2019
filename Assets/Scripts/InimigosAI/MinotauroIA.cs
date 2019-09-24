@@ -12,7 +12,8 @@ public class MinotauroIA : MonoBehaviour
         Patrulhar,
         Perseguir,
         Atropelar,
-        Atordoado
+        Atordoado,
+        Atacar
     }
 
     private Estados estadoAtual;
@@ -29,8 +30,9 @@ public class MinotauroIA : MonoBehaviour
     private float aceleracaoBase;
     private float velMaxBase;
     private float velAngularBase;
-    public float velRot;
+    public float velRot = 5f;
 
+    float distanciaPlayer;
     // Estado: Esperar
     [Header("Estados:Esperar")]
     public float tempoEsperar = 2f;
@@ -56,6 +58,7 @@ public class MinotauroIA : MonoBehaviour
 
     public Transform alvoAtropelar;
     private float distanciaColisao = 2f;
+    private int danoAtropelar = 2;
 
     [Header("Estado: Atordoado")]
     private float tempoAtordoado = 5f;
@@ -67,8 +70,9 @@ public class MinotauroIA : MonoBehaviour
 
     [Header("Estado: Atacar")]
     float tempoInicioAtaque;
-    float tempoAtacando;
+    float tempoAtacando = 2f;
     float alcanceAtaque = 3f;
+    private float distanciaAtaque = 4f;
 
     private void Awake()
     {
@@ -90,6 +94,7 @@ public class MinotauroIA : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        distanciaPlayer = Vector3.Distance(transform.position, player.position);
         Debug.DrawRay(transform.position, transform.forward * raySize, Color.red, 0.5f);
         ChecarEstados();
     }
@@ -97,9 +102,9 @@ public class MinotauroIA : MonoBehaviour
     private void ChecarEstados()
     {
 
-        if (estadoAtual != Estados.Atordoado && estadoAtual != Estados.Atropelar && estadoAtual != Estados.Perseguir && DetectouJogador())
+        if (estadoAtual != Estados.Atordoado && estadoAtual != Estados.Atropelar && estadoAtual != Estados.Perseguir && estadoAtual != Estados.Atacar && DetectouJogador())
         {
-            estadoAtual = Estados.Perseguir;
+            Perseguir();
         }
 
         switch (estadoAtual)
@@ -107,6 +112,7 @@ public class MinotauroIA : MonoBehaviour
             case Estados.Esperar:
                 if (EsperouSuficiente())
                 {
+                    
                     Patrulhar();
                 }
 
@@ -124,6 +130,11 @@ public class MinotauroIA : MonoBehaviour
                 {
                     Patrulhar();
                 }
+                else if (PlayerNoAlcanceAtaque())
+                {
+                    Atacar();
+                }
+
                 else
                 {
                     alvo = player;
@@ -166,6 +177,21 @@ public class MinotauroIA : MonoBehaviour
                 }
 
                 break;
+
+            case Estados.Atacar:
+                alvo = transform;
+                if (AcabouAtaque())
+                {
+                    if (PlayerNoAlcanceAtaque())
+                    {
+                        PlayerStats.playerVida--;
+                    }
+                        Esperar();
+                }
+
+                transform.rotation = Quaternion.Slerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(player.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
+
+                break;
         }
 
         if (alvo != null)
@@ -175,12 +201,15 @@ public class MinotauroIA : MonoBehaviour
 
     }
 
+
+
     #region Esperar
 
     private void Esperar()
     {
         estadoAtual = Estados.Esperar;
         tempoEsperando = Time.time;
+        anim.Play("Idle");
     }
 
     private bool EsperouSuficiente()
@@ -299,7 +328,11 @@ public class MinotauroIA : MonoBehaviour
         if (col.collider.CompareTag("Player"))
         {
             Debug.Log("AcertouPlayer");
-            Atordoado();
+            if(estadoAtual == Estados.Atropelar)
+            {
+                PlayerStats.playerVida -= danoAtropelar;
+                Atordoado();
+            }
         }
     }
 
@@ -328,4 +361,23 @@ public class MinotauroIA : MonoBehaviour
     }
 
     #endregion Atordoado
+
+    #region Atacar
+    private void Atacar()
+    {
+        anim.Play("Attack");
+        tempoInicioAtaque = Time.time;
+        estadoAtual = Estados.Atacar;
+    }
+
+    private bool PlayerNoAlcanceAtaque()
+    {
+        return Vector3.Distance(transform.position, player.position) < distanciaAtaque;
+    }
+    #endregion Atacar
+
+    bool AcabouAtaque()
+    {
+        return tempoInicioAtaque + tempoAtacando < Time.time;
+    }
 }

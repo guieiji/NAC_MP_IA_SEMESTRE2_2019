@@ -146,6 +146,8 @@ public class PatrulhadorAi2 : MonoBehaviour
     {
         estadoAtual = Estados.ESPERAR;
         tempoEsperar = Time.time;
+        atacando = false;
+        StopAllCoroutines();
         anim.Play("Idle");
         ResetarNavAgent();
     }
@@ -237,7 +239,7 @@ public class PatrulhadorAi2 : MonoBehaviour
     IEnumerator AtacandoPlayer()
     {
         anim.Play("Attack");
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         if(Vector3.Distance(player.position,transform.position) < distanciaAtaque)
         {
             PlayerStats.playerVida--;

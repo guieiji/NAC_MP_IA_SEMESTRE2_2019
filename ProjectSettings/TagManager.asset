@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Parede
   - Obstaculo
+  - Teleport
   layers:
   - Default
   - TransparentFX

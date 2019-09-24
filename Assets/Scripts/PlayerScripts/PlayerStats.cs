@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
+    
+
 
     public static int playerVida;
     public static float forcaLuz;
@@ -22,6 +24,8 @@ public class PlayerStats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        print(forcaLuz);
+
         forcaLuz = inputLuz / maxLuz;
 
 
