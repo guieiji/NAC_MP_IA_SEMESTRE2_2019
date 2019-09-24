@@ -26,7 +26,10 @@ public class TeleportScript : MonoBehaviour
     {
         if (col.CompareTag("Player"))
         {
-            Instantiate(player, destino.position, destino.rotation);
+            col.GetComponent<CharacterController>().enabled = false;
+            col.transform.position = destino.position;
+            col.GetComponent<CharacterController>().enabled = true;
+            //Instantiate(player, destino.position, destino.rotation);
         }
     }
 

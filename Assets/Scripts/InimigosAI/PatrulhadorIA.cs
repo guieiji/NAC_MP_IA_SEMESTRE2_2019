@@ -26,7 +26,7 @@ public class PatrulhadorIA : MonoBehaviour
     private Animator anim;
 
     [Header("ESTADO:PATRULHAR")]
-    private float distanciaPatrulhar = 6f;
+    public float distanciaPatrulhar = 20f;
 
     private int indexWaypoint = 0;
     public Transform[] waypoints;
@@ -132,7 +132,9 @@ public class PatrulhadorIA : MonoBehaviour
         
         if (estadoAtual == Estados.ATIRAR)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(player.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
+            //transform.rotation = Quaternion.Slerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(player.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.position - transform.position), Time.deltaTime * velRot);
+
             navAgent.destination = transform.position;
         }
         else

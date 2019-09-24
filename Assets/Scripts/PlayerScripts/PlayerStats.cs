@@ -10,8 +10,7 @@ public class PlayerStats : MonoBehaviour
 
     public static int playerVida;
     public static float forcaLuz;
-    float inputLuz;
-    float maxLuz;
+    float inputLuz = forcaLuz;
 
     public Text vida;
     // Start is called before the first frame update
@@ -26,7 +25,6 @@ public class PlayerStats : MonoBehaviour
     {
         print(forcaLuz);
 
-        forcaLuz = inputLuz / maxLuz;
 
 
         if(playerVida < 0)

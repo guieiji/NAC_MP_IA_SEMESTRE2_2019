@@ -2,16 +2,16 @@
 {
 	public enum ArdKeyCode
 	{
-		BUTTON_A,
-		BUTTON_B,
-		BUTTON_X,
-		BUTTON_Y,
+        BUTTON_LEFT,
+        BUTTON_DOWN,
+        BUTTON_UP,
+        BUTTON_RIGHT,
         BUTTON_SELECT,
         BUTTON_START,
-        BUTTON_UP,
-        BUTTON_LEFT,
-        BUTTON_RIGHT,
-        BUTTON_DOWN,
+		BUTTON_Y,
+		BUTTON_B,
+		BUTTON_X,
+		BUTTON_A,
         Luz
 
     }

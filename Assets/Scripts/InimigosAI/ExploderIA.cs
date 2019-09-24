@@ -65,6 +65,7 @@ public class ExploderIA : MonoBehaviour
     private void ChecarEstados()
     {
         distanciaPontoInicial = Vector3.Distance(posicaoInicial.position, transform.position);
+        print("Achou jogador:" + DetectouJogador());
 
         if (DetectouJogador() && estadoAtual != Estados.Perseguir && estadoAtual != Estados.Explodir)
         {
@@ -74,6 +75,11 @@ public class ExploderIA : MonoBehaviour
         switch (estadoAtual)
         {
             case Estados.Esperar:
+                if (DetectouJogador())
+                {
+                    Perseguir();
+                }
+
                 alvo = transform;
 
                 break;

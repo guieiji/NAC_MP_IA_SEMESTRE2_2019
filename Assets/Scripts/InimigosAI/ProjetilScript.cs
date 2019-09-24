@@ -13,7 +13,7 @@ public class ProjetilScript : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        transform.Translate(Vector3.forward * Time.deltaTime * (1 + PlayerStats.forcaLuz));
+        transform.Translate(Vector3.forward * Time.deltaTime);
     }
 
     private void OnCollisionEnter(Collision collision)

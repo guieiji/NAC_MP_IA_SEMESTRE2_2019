@@ -10,6 +10,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
     [RequireComponent(typeof (AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
+
+        public float move_V;
+        public float move_H;
+        public bool jumpKey;
+        public bool run;
+        public bool slide;
+
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
@@ -66,7 +73,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if (!m_Jump)
             {
                 //m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
-                m_Jump = Input.GetButtonDown("Jump");
+                m_Jump = jumpKey;
             }
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
@@ -97,6 +104,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         {
             float speed;
             GetInput(out speed);
+
+            
             // always move along the camera forward as it is the direction that it being aimed at
             Vector3 desiredMove = transform.forward*m_Input.y + transform.right*m_Input.x;
 
@@ -107,9 +116,10 @@ namespace UnityStandardAssets.Characters.FirstPerson
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
             m_MoveDir.x = desiredMove.x*speed;
-            m_MoveDir.z = desiredMove.z*speed;
 
 
+            m_MoveDir.z = desiredMove.z * speed;
+            
             if (m_CharacterController.isGrounded)
             {
                 m_MoveDir.y = -m_StickToGroundForce;
@@ -122,19 +132,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     m_Jumping = true;
                 }
 
-                if (Input.GetKey(KeyCode.LeftArrow))
+                if (move_H > 0)
                 {
-                    if (Input.GetKeyDown(KeyCode.B))
+                    if (slide)
                     {
-                        m_MoveDir.z = -200f;
+                        Debug.Log("Slide para direita");
+                        m_MoveDir.x = -200f;
                     }
                 }
 
-                if (Input.GetKey(KeyCode.RightArrow))
+                if (move_H < 0)
                 {
-                    if (Input.GetKeyDown(KeyCode.B))
+                    if (slide)
                     {
-                        m_MoveDir.z = 200f;
+                        m_MoveDir.x = 200f;
                     }
                 }
 
@@ -223,16 +234,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private void GetInput(out float speed)
         {
             // Read input
-            float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-            horizontal = 0;
-            float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+            //float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
+            float horizontal = 0;
+            
+            float vertical = move_V;
 
             bool waswalking = m_IsWalking;
 
 #if !MOBILE_INPUT
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
-            m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+            //m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+
+            m_IsWalking = !run;
+
 #endif
             // set the desired speed to be walking or running
             speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;

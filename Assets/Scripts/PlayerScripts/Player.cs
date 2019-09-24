@@ -31,5 +31,7 @@ public class Player : MonoBehaviour
         {
             transform.Translate(Vector3.forward * velocidade * Time.deltaTime);
         }
+
+
     }
 }

@@ -75,10 +75,10 @@ namespace ArdJoystick
 
 				try
 				{
-                    string result = serialPort.ReadLine();
+                    //string result = serialPort.ReadLine();
 
                     // Tests
-					//string result = SimulateReadLine();
+					string result = SimulateReadLine();
                  
                     Debug.Log(result);
                     Debug.Log("teste");
@@ -95,6 +95,8 @@ namespace ArdJoystick
 
 						button.ProcessData(data);
 					}
+
+                    
                     PlayerStats.forcaLuz = data;
 
 
@@ -128,16 +130,16 @@ namespace ArdJoystick
 		private string SimulateReadLine()
 		{
 			string result = "";
-            result += (Input.GetKey(KeyCode.Z) ? "1" : "0") + ";";
-            result += (Input.GetKey(KeyCode.X) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.A) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.S) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.W) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.D) ? "1" : "0") + ";";
+            result += "1" + ";";
+            result += "1" + ";";
+            result += (Input.GetKey(KeyCode.LeftShift) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.Space) ? "1" : "0") + ";";
+            result += (Input.GetKey(KeyCode.L) ? "1" : "0") + ";";
             result += (Input.GetKey(KeyCode.C) ? "1" : "0") + ";";
-            result += (Input.GetKey(KeyCode.V) ? "1" : "0") + ";";
-            result += "1" + ";";
-            result += "1" + ";";
-            result += "0" + ";";
-            result += "0" + ";";
-            result += "1" + ";";
-            result += "1" + ";";
             result += "1000";
             return result;
 		}

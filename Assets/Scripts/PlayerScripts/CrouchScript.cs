@@ -7,6 +7,7 @@ public class CrouchScript : MonoBehaviour
     private CharacterController controller;
     bool agachado;
     public float impulso = 5f;
+    public bool crouchBtn;
 
     // Start is called before the first frame update
     void Start()

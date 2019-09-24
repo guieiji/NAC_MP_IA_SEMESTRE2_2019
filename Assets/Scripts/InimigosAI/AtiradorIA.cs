@@ -25,13 +25,13 @@ public class AtiradorIA : MonoBehaviour
     Animator anim;
 
     [Header("ESTADO:PROCURAR")]
-    private float distanciaProcurar = 20f;
+    public float distanciaProcurar = 10f;
 
     [Header("ESTADO:ATIRAR")]
     private float tempoAtirar = 4f;
 
     private float tempoComecouAtirar;
-    private float velRot = 5f;
+    private float velRot = 10f;
     public GameObject bala;
     public Transform pontaArma;
     public float rateOfFire = 1f;
@@ -112,8 +112,8 @@ public class AtiradorIA : MonoBehaviour
         }
         if (estadoAtual == Estados.ATIRAR)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(player.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
-
+            //transform.rotation = Quaternion.Lerp(transform.rotation, new Quaternion(transform.rotation.x, Quaternion.LookRotation(player.position - transform.position).y, transform.rotation.z, transform.rotation.w), Time.deltaTime * velRot);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.position - transform.position), Time.deltaTime * velRot);
         }
     }
     #region PROCURAR

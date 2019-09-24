@@ -4,9 +4,12 @@ using UnityStandardAssets.CrossPlatformInput;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
+    
     [Serializable]
-    public class MouseLook
+    public class MouseLook 
     {
+        public static float cameraDir;
+
         public float XSensitivity = 2f;
         public float YSensitivity = 2f;
         public bool clampVerticalRotation = true;
@@ -30,8 +33,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public void LookRotation(Transform character, Transform camera)
         {
-            float yRot = Input.GetAxis("Horizontal") * XSensitivity;
-
+            float yRot = cameraDir * XSensitivity;
 
             float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
             xRot = 0;
